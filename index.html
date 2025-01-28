@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Chart Color Contrast Checker</title>
+  <!-- Link to External CSS -->
+  <link rel="stylesheet" href="styles.css">
+</head>
+
+<body>
+  <!-- New Parent Container -->
+  <div id="mainContainer">
+    <!-- Existing Wrapper -->
+    <div id="wrapper">
+      <h1>Chart Color Contrast Checker</h1>
+
+      <div class="fieldsets-container">
+        <!-- Fieldset: Background Color -->
+        <fieldset>
+          <legend>Background Color</legend>
+          <div id="colorwrapper">
+            <input type="color" id="bgColor" value="#ffffff" aria-label="Color picker" />
+            <input type="text" id="bgColorText" value="#ffffff" aria-label="Hex color" />
+          </div>
+          <div id="lightnesswrapper">
+            <label for="bgLightness" class="lightnesslabel">Lightness</label>
+            <input type="range" id="bgLightness" min="0" max="100" value="100" />
+          </div>
+        </fieldset>
+
+        <!-- Fieldset: Dataset 1 -->
+        <fieldset>
+          <legend>Dataset 1 Color</legend>
+          <div id="colorwrapper">
+            <input type="color" id="chartColor1" value="#ff3838" aria-label="Color picker" />
+            <input type="text" id="chartColor1Text" value="#ff3838" aria-label="Hex color" />
+          </div>
+          <div id="lightnesswrapper">
+            <label for="chartLightness1" class="lightnesslabel">Lightness</label>
+            <input type="range" id="chartLightness1" min="0" max="100" value="100" />
+          </div>
+        </fieldset>
+
+        <!-- Fieldset: Dataset 2 -->
+        <fieldset>
+          <legend>Dataset 2 Color</legend>
+          <div id="colorwrapper">
+            <input type="color" id="chartColor2" value="#0707cf" aria-label="Color picker" />
+            <input type="text" id="chartColor2Text" value="#0707cf" aria-label="Hex color" />
+          </div>
+          <div id="lightnesswrapper">
+            <label for="chartLightness2" class="lightnesslabel">Lightness</label>
+            <input type="range" id="chartLightness2" min="0" max="100" value="100" />
+          </div>
+        </fieldset>
+      </div>
+
+      <!-- Contrast Results -->
+      <div class="contrast-result" id="contrastResults">
+        <!-- Contrast boxes will be dynamically inserted here -->
+      </div>
+
+      <!-- Two charts, side by side -->
+      <div class="charts-row">
+        <!-- Bar Chart -->
+        <div class="chart-preview" role="img" aria-label="Bar Chart">
+          <canvas id="chartCanvas" width="400" height="200"></canvas>
+          <div class="chart-legend" id="barChartLegend" aria-hidden="true">
+            <!-- Legend items will be dynamically inserted here -->
+          </div>
+        </div>
+
+        <!-- Line Chart -->
+        <div class="chart-preview" role="img" aria-label="Line Chart">
+          <canvas id="lineChartCanvas" width="400" height="200"></canvas>
+          <div class="chart-legend" id="lineChartLegend" aria-hidden="true">
+            <!-- Legend items will be dynamically inserted here -->
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- New Explanation Container -->
+    <div id="explanation">
+      <h2>Explanation</h2>
+      <p>
+        Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vivamus lacinia odio vitae vestibulum vestibulum.
+        Cras venenatis euismod malesuada. Nullam ac erat ante. Integer fringilla, ipsum a facilisis vestibulum,
+        justo sapien gravida nulla, a tristique elit metus non metus. Sed sit amet sapien in odio malesuada aliquam.
+        Duis vulputate, lectus nec feugiat dapibus, sapien quam sollicitudin nunc, in vestibulum leo nisl in sapien.
+        Quisque ac lacus nec metus tempor auctor. Nulla facilisi. Aenean sit amet magna vel sapien tempor interdum.
+        Donec in tortor nec massa elementum tincidunt. Proin euismod, nunc at ullamcorper facilisis, lacus neque
+        ullamcorper magna, sit amet gravida nibh metus nec justo.
+      </p>
+    </div>
+  </div>
+
+  <!-- Link to External JavaScript -->
+  <script src="script.js"></script>
+</body>
+
+</html>

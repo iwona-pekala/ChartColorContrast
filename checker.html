@@ -1,0 +1,651 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Chart Color Contrast Checker</title>
+  <style>
+    /* Apply box-sizing globally for consistency */
+/* Apply box-sizing globally for consistency */
+*, *::before, *::after {
+  box-sizing: border-box;
+}
+
+body {
+  font-family: Arial, sans-serif;
+}
+
+/* Set wrapper to 70% width and center it */
+#wrapper {
+  width: 70%;
+  margin: 0 auto;
+}
+
+/* Ensure all inner divs take 100% width of the wrapper */
+#wrapper div {
+  width: 100%;
+}
+
+/* Flex container for fieldsets and contrast results */
+.fieldsets-container, #contrastResults {
+  display: flex;
+  flex-direction: row;
+  gap: 1rem; /* Consistent gap between items */
+  justify-content: space-between; /* Even distribution */
+}
+
+.fieldsets-container {
+  margin-bottom: 1rem; /* Space below fieldsets */
+}
+
+#contrastResults {
+  margin-top: 10px; /* Space above contrast results */
+}
+
+/* Fieldset and Contrast Box Styling */
+fieldset, .contrast-box {
+  flex: 0 0 30%; /* Fixed width, do not grow or shrink */
+  padding: 1rem; /* Consistent padding */
+  margin: 0; /* Remove default margins */
+  border: 3px solid #ccc; /* Consistent border width and style */
+  border-radius: 4px; /* Consistent border radius */
+  display: flex;
+  flex-direction: column; /* Arrange child elements vertically */
+  align-items: flex-start; /* Align items to the start */
+  gap: 0.5rem; /* Space between child elements */
+}
+
+/* Legend Styling */
+legend {
+  font-weight: bold;
+  margin-bottom: 0.5em;
+}
+
+/* Input Styling within Fieldset */
+fieldset input {
+  display: block;
+  width: 80%;
+  margin-bottom: 0.5rem;
+}
+
+/* Contrast Ratio Styling */
+.contrast-ratio {
+  font-size: 2rem;
+  font-weight: bold;
+  color: #000;
+}
+
+/* Charts Row Styling */
+.charts-row {
+  display: flex;
+  flex-direction: row;
+  gap: 1rem;
+  margin-top: 20px;
+  justify-content: center; /* Centers the charts horizontally */
+}
+
+/* Chart Preview Styling */
+.chart-preview {
+  display: flex;
+  flex-direction: column;
+  align-items: center; /* Center contents horizontally */
+  justify-content: center;
+  width: 100%; /* Ensure the chart preview takes full width */
+}
+
+/* Canvas Styling */
+canvas {
+  border: 3px solid #ccc;
+  border-radius: 4px;
+  display: block;
+  max-width: 100%; /* Ensure canvas doesn't overflow its container */
+  height: auto;
+}
+
+/* Chart Legend Styling */
+.chart-legend {
+  display: flex;
+  flex-direction: row;
+  gap: 1rem;
+  margin-top: 10px;
+  justify-content: center; /* Center the legend items horizontally */
+  width: 100%; /* Match the width of the chart preview */
+}
+
+.legend-item {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.lightnesslabel {
+  padding-top: 1.2rem;
+}
+
+.color-square {
+  width: 12px;
+  height: 12px;
+  display: inline-block;
+  border: 1px solid #000; /* Optional: Add border for better visibility */
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  /* Ensure the wrapper takes full width on smaller screens */
+  #wrapper {
+    width: 100%;
+    padding: 0 1rem; /* Optional: Add some padding for better aesthetics */
+  }
+
+  .fieldsets-container,
+  #contrastResults,
+  .charts-row { /* Ensure charts-row is also responsive */
+    flex-direction: column;
+    align-items: stretch; /* Changed from center to stretch */
+    gap: 1rem; /* Maintain consistent gaps */
+  }
+
+  fieldset,
+  .contrast-box { /* Adjust only fieldset and contrast-box for full width */
+    flex: 1 0 100%; /* Allow elements to grow and occupy full width */
+    align-items: flex-start; /* Align items to the start for consistency */
+    width: 100%; /* Explicitly set width to 100% */
+  }
+
+  /* Ensure chart-preview retains its original styling */
+  .chart-preview {
+    /* Remove any conflicting flex properties */
+    align-items: center; /* Maintain center alignment for chart contents */
+    width: 100%; /* Ensure charts take full width */
+  }
+
+  /* Optional: Adjust canvas size for better fit */
+  canvas {
+    max-width: 100%;
+    height: auto;
+  }
+}
+
+  </style>
+</head>
+<body>
+  <div id="wrapper">
+    <h1>Chart Color Contrast Checker</h1>
+
+    <div class="fieldsets-container">
+      <!-- Fieldset: Background Color -->
+      <fieldset>
+        <legend>Background Color</legend>
+        <input type="color" id="bgColor" value="#ffffff" aria-label="Color picker" />
+        <input type="text" id="bgColorText" value="#ffffff" aria-label="Hex color" />
+        <label for="bgLightness" class="lightnesslabel">Lightness</label>
+        <input type="range" id="bgLightness" min="0" max="100" value="100" />
+      </fieldset>
+
+      <!-- Fieldset: Dataset 1 -->
+      <fieldset>
+        <legend>Dataset 1</legend>
+        <input type="color" id="chartColor1" value="#ff3838" aria-label="Color picker" />
+        <input type="text" id="chartColor1Text" value="#ff3838" aria-label="Hex color" />
+        <label for="chartLightness1" class="lightnesslabel">Lightness</label>
+        <input type="range" id="chartLightness1" min="0" max="100" value="100" />
+      </fieldset>
+
+      <!-- Fieldset: Dataset 2 -->
+      <fieldset>
+        <legend>Dataset 2</legend>
+        <input type="color" id="chartColor2" value="#0707cf" aria-label="Color picker" />
+        <input type="text" id="chartColor2Text" value="#0707cf" aria-label="Hex color" />
+        <label for="chartLightness2" class="lightnesslabel">Lightness</label>
+        <input type="range" id="chartLightness2" min="0" max="100" value="100" />
+      </fieldset>
+    </div>
+
+    <!-- Contrast Results -->
+    <div class="contrast-result" id="contrastResults">
+      <!-- Contrast boxes will be dynamically inserted here -->
+    </div>
+
+    <!-- Two charts, side by side -->
+    <div class="charts-row">
+      <!-- Bar Chart -->
+      <div class="chart-preview" role="img" aria-label="Bar Chart">
+        <canvas id="chartCanvas" width="400" height="200"></canvas>
+        <div class="chart-legend" id="barChartLegend" aria-hidden="true">
+          <!-- Legend items will be dynamically inserted here -->
+        </div>
+      </div>
+
+      <!-- Line Chart -->
+      <div class="chart-preview" role="img" aria-label="Line Chart">
+        <canvas id="lineChartCanvas" width="400" height="200"></canvas>
+        <div class="chart-legend" id="lineChartLegend" aria-hidden="true">
+          <!-- Legend items will be dynamically inserted here -->
+        </div>
+      </div>
+    </div>
+  </div>
+<script>
+// DOM references
+const bgColor          = document.getElementById("bgColor");
+const bgColorText      = document.getElementById("bgColorText");
+const bgLightness      = document.getElementById("bgLightness");
+
+const chartColor1      = document.getElementById("chartColor1");
+const chartColor1Text  = document.getElementById("chartColor1Text");
+const chartLightness1  = document.getElementById("chartLightness1");
+
+const chartColor2      = document.getElementById("chartColor2");
+const chartColor2Text  = document.getElementById("chartColor2Text");
+const chartLightness2  = document.getElementById("chartLightness2");
+
+const contrastResults  = document.getElementById("contrastResults");
+const chartCanvas      = document.getElementById("chartCanvas");
+const lineChartCanvas  = document.getElementById("lineChartCanvas");
+
+const barChartLegend   = document.getElementById("barChartLegend");
+const lineChartLegend  = document.getElementById("lineChartLegend");
+
+// --- Conversions & WCAG helpers ---
+function hexToRgb(hex) {
+  return [
+    parseInt(hex.slice(1, 3), 16),
+    parseInt(hex.slice(3, 5), 16),
+    parseInt(hex.slice(5, 7), 16),
+  ];
+}
+function rgbToHex(r, g, b) {
+  return (
+    "#" +
+    ((1 << 24) + (r << 16) + (g << 8) + b)
+      .toString(16)
+      .slice(1)
+      .toUpperCase()
+  );
+}
+function getLuminance(r, g, b) {
+  const sr = r / 255, sg = g / 255, sb = b / 255;
+  const rr = sr <= 0.03928 ? sr / 12.92 : Math.pow((sr + 0.055) / 1.055, 2.4);
+  const gg = sg <= 0.03928 ? sg / 12.92 : Math.pow((sg + 0.055) / 1.055, 2.4);
+  const bb = sb <= 0.03928 ? sb / 12.92 : Math.pow((sb + 0.055) / 1.055, 2.4);
+  return 0.2126 * rr + 0.7152 * gg + 0.0722 * bb;
+}
+function getContrastRatio(rgb1, rgb2) {
+  const lum1 = getLuminance(rgb1[0], rgb1[1], rgb1[2]);
+  const lum2 = getLuminance(rgb2[0], rgb2[1], rgb2[2]);
+  const brighter = Math.max(lum1, lum2);
+  const darker   = Math.min(lum1, lum2);
+  return (brighter + 0.05) / (darker + 0.05);
+}
+
+// RGB → HSV
+function rgbToHsv(r, g, b) {
+  r /= 255; g /= 255; b /= 255;
+  const max = Math.max(r, g, b),
+        min = Math.min(r, g, b),
+        d   = max - min;
+  let h = 0;
+  const s = max === 0 ? 0 : d / max;
+  if (max !== min) {
+    if (max === r) {
+      h = (g - b) / d + (g < b ? 6 : 0);
+    } else if (max === g) {
+      h = (b - r) / d + 2;
+    } else {
+      h = (r - g) / d + 4;
+    }
+    h *= 60;
+  }
+  return [h, s, max];
+}
+// HSV → RGB
+function hsvToRgb(h, s, v) {
+  const i = Math.floor(h / 60),
+        f = h / 60 - i,
+        p = v * (1 - s),
+        q = v * (1 - f * s),
+        t = v * (1 - (1 - f) * s);
+  let r, g, b;
+  switch (i % 6) {
+    case 0: r = v; g = t; b = p; break;
+    case 1: r = q; g = v; b = p; break;
+    case 2: r = p; g = v; b = t; break;
+    case 3: r = p; g = q; b = v; break;
+    case 4: r = t; g = p; b = v; break;
+    case 5: r = v; g = p; b = q; break;
+  }
+  return [
+    Math.round(r * 255),
+    Math.round(g * 255),
+    Math.round(b * 255),
+  ];
+}
+
+// --- Sync color↔slider↔text ---
+function syncSliderWithColor(colorInput, slider) {
+  const [r, g, b] = hexToRgb(colorInput.value);
+  const [h, s, v] = rgbToHsv(r, g, b);
+  slider.value = Math.round(v * 100);
+}
+function syncColorWithSlider(colorInput, slider) {
+  const [r, g, b] = hexToRgb(colorInput.value);
+  const [h, s, /*v*/] = rgbToHsv(r, g, b);
+  const newV = slider.value / 100;
+  const [nr, ng, nb] = hsvToRgb(h, s, newV);
+  colorInput.value = rgbToHex(nr, ng, nb);
+}
+function syncTextWithColor(colorInput, textInput) {
+  textInput.value = colorInput.value;
+}
+function syncColorWithText(colorInput, textInput) {
+  const val = textInput.value.trim();
+  if (/^#[0-9A-Fa-f]{6}$/.test(val)) {
+    colorInput.value = val;
+  }
+}
+
+/* === Bar Chart (4 bars per category) === */
+function drawBarChart(bgRGB, chart1RGB, chart2RGB) {
+  const ctx = chartCanvas.getContext("2d");
+  const w   = chartCanvas.width;
+  const h   = chartCanvas.height;
+
+  // Clear the canvas before drawing
+  ctx.clearRect(0, 0, w, h);
+
+  // Fill background
+  ctx.fillStyle = `rgb(${bgRGB[0]}, ${bgRGB[1]}, ${bgRGB[2]})`;
+  ctx.fillRect(0, 0, w, h);
+
+  const margin = 30;
+
+  // Ensure full opacity for axes
+  ctx.globalAlpha = 1.0;
+
+  // Axes (using default color, e.g., black)
+  ctx.strokeStyle = "#000000"; // Default to black
+  ctx.lineWidth   = 1;
+  // X-axis
+  ctx.beginPath();
+  ctx.moveTo(margin, h - margin);
+  ctx.lineTo(w - margin, h - margin);
+  ctx.stroke();
+  // Y-axis
+  ctx.beginPath();
+  ctx.moveTo(margin, h - margin);
+  ctx.lineTo(margin, margin);
+  ctx.stroke();
+
+  // 2 categories, each with 4 bars (Dataset 1 and 2 repeated)
+  const barHeights = [
+    [80, 100, 90, 110], // Category A
+    [120, 60, 130, 70],  // Category B
+  ];
+  const color1 = `rgb(${chart1RGB[0]}, ${chart1RGB[1]}, ${chart1RGB[2]})`;
+  const color2 = `rgb(${chart2RGB[0]}, ${chart2RGB[1]}, ${chart2RGB[2]})`;
+  const colors = [color1, color2];
+
+  // Define bar and gap dimensions
+  const barWidth    = 25; // Increased from 20 to 25 for slightly wider bars
+  const internalGap = 10; // Space between Dataset 1 and Dataset 2 bars within a set
+  const setGap      = 30; // Space between different sets of bars
+  const setWidth    = barWidth * 2 + internalGap; // Total width of a set (Dataset 1 + gap + Dataset 2)
+  const groupGap    = setWidth + setGap; // Gap between different categories
+
+  const startX      = margin + 40; // Starting X position for the first category
+
+  for (let c = 0; c < barHeights.length; c++) {
+    const category = barHeights[c];
+
+    for (let s = 0; s < 2; s++) { // Two sets per category
+      const setX = startX + c * groupGap + s * (setWidth + setGap);
+
+      for (let b = 0; b < 2; b++) { // Two bars per set (Dataset 1 and 2)
+        const barIndex = s * 2 + b; // Index to access barHeights
+        const barX = setX + b * (barWidth + internalGap);
+        const barH = category[barIndex];
+        
+        // **Updated Line: Move the bar up by 2 pixels to prevent overlapping the x-axis**
+        const barY = (h - margin) - barH - 2; // Subtracting 2 pixels
+
+        ctx.fillStyle = colors[b % colors.length];
+        ctx.fillRect(barX, barY, barWidth, barH);
+      }
+    }
+  }
+
+  // Legends are handled outside the canvas
+}
+
+/* === Line Chart (extend lines with two more points) === */
+function drawLineChart(bgRGB, chart1RGB, chart2RGB) {
+  const ctx = lineChartCanvas.getContext("2d");
+  const w   = lineChartCanvas.width;
+  const h   = lineChartCanvas.height;
+
+  // Clear the canvas before drawing
+  ctx.clearRect(0, 0, w, h);
+
+  // Fill background
+  ctx.fillStyle = `rgb(${bgRGB[0]}, ${bgRGB[1]}, ${bgRGB[2]})`;
+  ctx.fillRect(0, 0, w, h);
+
+  const margin = 30;
+
+  // Ensure full opacity for axes
+  ctx.globalAlpha = 1.0;
+
+  // Axes (using default color, e.g., black)
+  ctx.strokeStyle = "#000000"; // Default to black
+  ctx.lineWidth   = 1;
+  // X-axis
+  ctx.beginPath();
+  ctx.moveTo(margin, h - margin);
+  ctx.lineTo(w - margin, h - margin);
+  ctx.stroke();
+  // Y-axis
+  ctx.beginPath();
+  ctx.moveTo(margin, h - margin);
+  ctx.lineTo(margin, margin);
+  ctx.stroke();
+
+  // === Line Chart Coordinates ===
+  const line1Points = [
+    { x: margin + 10,  y: (h - margin) - 20  },
+    { x: margin + 60,  y: (h - margin) - 70  },
+    { x: margin + 110, y: (h - margin) - 40  },
+    { x: margin + 160, y: (h - margin) - 80  },
+    { x: margin + 210, y: (h - margin) - 50  },
+    { x: margin + 260, y: (h - margin) - 90  },
+    { x: margin + 310, y: (h - margin) - 60  },  // New Point
+    { x: margin + 330, y: (h - margin) - 100 }  // Reduced by another 10px from 340 to 330
+  ];
+  const line2Points = [
+    { x: margin + 10,  y: (h - margin) - 50  },
+    { x: margin + 60,  y: (h - margin) - 100 },
+    { x: margin + 110, y: (h - margin) - 60  },
+    { x: margin + 160, y: (h - margin) - 110 },
+    { x: margin + 210, y: (h - margin) - 70  },
+    { x: margin + 260, y: (h - margin) - 120 },
+    { x: margin + 310, y: (h - margin) - 80  },  // New Point
+    { x: margin + 330, y: (h - margin) - 130 }  // Reduced by another 10px from 340 to 330
+  ];
+
+  const color1 = `rgb(${chart1RGB[0]}, ${chart1RGB[1]}, ${chart1RGB[2]})`;
+  const color2 = `rgb(${chart2RGB[0]}, ${chart2RGB[1]}, ${chart2RGB[2]})`;
+
+  drawSmoothLine(ctx, line1Points, color1);
+  drawSmoothLine(ctx, line2Points, color2);
+
+  // Legends are handled outside the canvas
+}
+
+function drawSmoothLine(ctx, points, strokeColor) {
+  if (!points || points.length < 2) return;
+
+  ctx.beginPath();
+  ctx.moveTo(points[0].x, points[0].y);
+  for (let i = 0; i < points.length - 1; i++) {
+    const xMid = (points[i].x + points[i + 1].x) / 2;
+    const yMid = (points[i].y + points[i + 1].y) / 2;
+    ctx.quadraticCurveTo(points[i].x, points[i].y, xMid, yMid);
+  }
+  const last = points[points.length - 1];
+  ctx.lineTo(last.x, last.y);
+  ctx.strokeStyle = strokeColor;
+  ctx.lineWidth = 2;
+  ctx.stroke();
+
+  const first = points[0];
+  ctx.beginPath();
+  ctx.arc(first.x, first.y, 3, 0, 2 * Math.PI);
+  ctx.fillStyle = strokeColor;
+  ctx.fill();
+
+  ctx.beginPath();
+  ctx.arc(last.x, last.y, 3, 0, 2 * Math.PI);
+  ctx.fillStyle = strokeColor;
+  ctx.fill();
+}
+
+// --- Update & Contrast ---
+function updateCharts() {
+  const bgRGB     = hexToRgb(bgColor.value);
+  const chart1RGB = hexToRgb(chartColor1.value);
+  const chart2RGB = hexToRgb(chartColor2.value);
+
+  const ratio1 = getContrastRatio(chart1RGB, bgRGB).toFixed(2);
+  const ratio2 = getContrastRatio(chart2RGB, bgRGB).toFixed(2);
+  const ratio3 = getContrastRatio(chart1RGB, chart2RGB).toFixed(2);
+
+  const passFail = r => parseFloat(r) >= 3.0 ? "PASS" : "FAIL";
+  const borderColor = r => parseFloat(r) >= 3.0 ? "#080" : "#EB0000";
+
+  const box1 = `
+    <div class="contrast-box" style="border-color: ${borderColor(ratio1)};">
+      <div>Dataset 1 <strong>vs</strong> Background</div>
+      <div class="contrast-ratio">${ratio1}:1</div>
+      <div>WCAG 1.4.11: ${passFail(ratio1)}</div>
+    </div>
+  `;
+  const box2 = `
+    <div class="contrast-box" style="border-color: ${borderColor(ratio2)};">
+      <div>Dataset 2 <strong>vs</strong> Background</div>
+      <div class="contrast-ratio">${ratio2}:1</div>
+      <div>WCAG 1.4.11: ${passFail(ratio2)}</div>
+    </div>
+  `;
+  const box3 = `
+    <div class="contrast-box" style="border-color: ${borderColor(ratio3)};">
+      <div>Dataset 1 <strong>vs</strong> Dataset 2</div>
+      <div class="contrast-ratio">${ratio3}:1</div>
+      <div>WCAG 1.4.1: ${passFail(ratio3)}</div>
+    </div>
+  `;
+  contrastResults.innerHTML = box1 + box2 + box3;
+
+  // --- Removed Axes Color Determination Code ---
+
+  drawBarChart(bgRGB, chart1RGB, chart2RGB); // No axesColor passed
+  drawLineChart(bgRGB, chart1RGB, chart2RGB); // No axesColor passed
+
+  updateLegends(chart1RGB, chart2RGB);
+}
+
+// --- Update Legends ---
+function updateLegends(chart1RGB, chart2RGB) {
+  // Format colors for CSS
+  const color1 = `rgb(${chart1RGB[0]}, ${chart1RGB[1]}, ${chart1RGB[2]})`;
+  const color2 = `rgb(${chart2RGB[0]}, ${chart2RGB[1]}, ${chart2RGB[2]})`;
+
+  // Update Bar Chart Legend
+  barChartLegend.innerHTML = `
+    <span class="legend-item">
+      <span class="color-square" style="background-color: ${color1};"></span>
+      <span class="legend-text">Dataset 1</span>
+    </span>
+    <span class="legend-item">
+      <span class="color-square" style="background-color: ${color2};"></span>
+      <span class="legend-text">Dataset 2</span>
+    </span>
+  `;
+
+  // Update Line Chart Legend
+  lineChartLegend.innerHTML = `
+    <span class="legend-item">
+      <span class="color-square" style="background-color: ${color1};"></span>
+      <span class="legend-text">Dataset 1</span>
+    </span>
+    <span class="legend-item">
+      <span class="color-square" style="background-color: ${color2};"></span>
+      <span class="legend-text">Dataset 2</span>
+    </span>
+  `;
+}
+
+// --- Event Listeners & Initialization ---
+bgColor.addEventListener('input', () => {
+  syncSliderWithColor(bgColor, bgLightness);
+  syncTextWithColor(bgColor, bgColorText);
+  updateCharts();
+});
+bgColorText.addEventListener('input', () => {
+  syncColorWithText(bgColor, bgColorText);
+  syncSliderWithColor(bgColor, bgLightness);
+  updateCharts();
+});
+bgLightness.addEventListener('input', () => {
+  syncColorWithSlider(bgColor, bgLightness);
+  syncTextWithColor(bgColor, bgColorText);
+  updateCharts();
+});
+
+chartColor1.addEventListener('input', () => {
+  syncSliderWithColor(chartColor1, chartLightness1);
+  syncTextWithColor(chartColor1, chartColor1Text);
+  updateCharts();
+});
+chartColor1Text.addEventListener('input', () => {
+  syncColorWithText(chartColor1, chartColor1Text);
+  syncSliderWithColor(chartColor1, chartLightness1);
+  updateCharts();
+});
+chartLightness1.addEventListener('input', () => {
+  syncColorWithSlider(chartColor1, chartLightness1);
+  syncTextWithColor(chartColor1, chartColor1Text);
+  updateCharts();
+});
+
+chartColor2.addEventListener('input', () => {
+  syncSliderWithColor(chartColor2, chartLightness2);
+  syncTextWithColor(chartColor2, chartColor2Text);
+  updateCharts();
+});
+chartColor2Text.addEventListener('input', () => {
+  syncColorWithText(chartColor2, chartColor2Text);
+  syncSliderWithColor(chartColor2, chartLightness2);
+  updateCharts();
+});
+chartLightness2.addEventListener('input', () => {
+  syncColorWithSlider(chartColor2, chartLightness2);
+  syncTextWithColor(chartColor2, chartColor2Text);
+  updateCharts();
+});
+
+window.addEventListener('DOMContentLoaded', () => {
+  // Initial synchronization
+  syncSliderWithColor(bgColor, bgLightness);
+  syncTextWithColor(bgColor, bgColorText);
+
+  syncSliderWithColor(chartColor1, chartLightness1);
+  syncTextWithColor(chartColor1, chartColor1Text);
+
+  syncSliderWithColor(chartColor2, chartLightness2);
+  syncTextWithColor(chartColor2, chartColor2Text);
+
+  // Initial chart drawing
+  updateCharts();
+});
+</script>
+</body>
+</html>
