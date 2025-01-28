@@ -552,5 +552,3 @@ window.addEventListener('DOMContentLoaded', () => {
   // Initial chart drawing
   updateCharts();
 });
-
-
