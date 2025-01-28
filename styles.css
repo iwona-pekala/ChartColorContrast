@@ -52,10 +52,11 @@ body {
   flex: 1;
 }
 
-/* New Explanation Container Styling */
-#explanation {
+#aside {
   flex: 0 0 30%;
-  /* Fixed width on larger screens */
+}
+
+#explanation {
   border: 2px solid #ccc;
   /* Optional: Add border for distinction */
   border-radius: 4px;
@@ -67,7 +68,7 @@ body {
 }
 
 /* Heading Styling within Explanation */
-#explanation h2 {
+#aside h2 {
   margin-top: 0;
   /* Remove default top margin */
   font-size: 1.5rem;
@@ -76,7 +77,7 @@ body {
   /* Darker color for heading */
 }
 
-#explanation p {
+#aside p {
   font-size: 1rem;
   /* Standard paragraph size */
   line-height: 1.5;
@@ -292,7 +293,7 @@ canvas {
 
   /* Ensure wrapper and explanation take full width */
   #wrapper,
-  #explanation {
+  #aside {
     width: 100%;
   }
 
@@ -394,34 +395,39 @@ canvas {
   }
 
   /* Adjust #explanation padding and font size for smaller screens */
-  #explanation {
+  #aside {
     padding: 0.5rem;
   }
 
-  #explanation h2 {
+  #aside h2 {
     font-size: 1.2rem;
   }
 
-  #explanation p {
+  #aside p {
     font-size: 0.9rem;
   }
 }
 
 /* Ensure Sufficient Contrast in Explanation Container */
-#explanation {
+#aside {
   color: #333;
   /* Dark text on light background */
 }
 
-#explanation a {
-  color: #007BFF;
-  /* Link color */
-  text-decoration: none;
+#permalink {
+  margin-top: 1rem;
 }
 
-#explanation a:hover,
-#explanation a:focus {
+#aside a {
+  color: #0072ED;
   text-decoration: underline;
+}
+
+#aside a:hover,
+#aside a:focus {
+  color: #0052AB;
+  text-decoration-line: underline;
+  text-decoration-style: double;
 }
 
 /* ===========================

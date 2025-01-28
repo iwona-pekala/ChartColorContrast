@@ -344,6 +344,7 @@ function updateCharts() {
   drawLineChart(bgRGB, chart1RGB, chart2RGB);
 
   updateLegends(chart1RGB, chart2RGB);
+  updatePermalink();
 }
 
 // --- Update Legends ---
@@ -375,6 +376,50 @@ function updateLegends(chart1RGB, chart2RGB) {
       <span class="legend-text">Dataset 2</span>
     </span>
   `;
+}
+
+// Add this function to update the permalink
+function updatePermalink() {
+  const params = new URLSearchParams({
+    bgcolor: bgColor.value,
+    datacolor1: chartColor1.value,
+    datacolor2: chartColor2.value
+  });
+  
+  const permalink = document.querySelector('#permalink a');
+  permalink.href = `${window.location.pathname}?${params.toString()}`;
+}
+
+// Add this function to handle URL parameters on page load
+function handleUrlParams() {
+  const params = new URLSearchParams(window.location.search);
+  
+  if (params.has('bgcolor')) {
+    const bgColorValue = params.get('bgcolor');
+    if (/^#[0-9A-Fa-f]{6}$/.test(bgColorValue)) {
+      bgColor.value = bgColorValue;
+      bgColorText.value = bgColorValue;
+      syncSliderWithColor(bgColor, bgLightness);
+    }
+  }
+  
+  if (params.has('datacolor1')) {
+    const color1Value = params.get('datacolor1');
+    if (/^#[0-9A-Fa-f]{6}$/.test(color1Value)) {
+      chartColor1.value = color1Value;
+      chartColor1Text.value = color1Value;
+      syncSliderWithColor(chartColor1, chartLightness1);
+    }
+  }
+  
+  if (params.has('datacolor2')) {
+    const color2Value = params.get('datacolor2');
+    if (/^#[0-9A-Fa-f]{6}$/.test(color2Value)) {
+      chartColor2.value = color2Value;
+      chartColor2Text.value = color2Value;
+      syncSliderWithColor(chartColor2, chartLightness2);
+    }
+  }
 }
 
 // --- Event Listeners & Initialization ---
@@ -427,6 +472,9 @@ chartLightness2.addEventListener('input', () => {
 });
 
 window.addEventListener('DOMContentLoaded', () => {
+  // Handle URL parameters first
+  handleUrlParams();
+
   // Initial synchronization
   syncSliderWithColor(bgColor, bgLightness);
   syncTextWithColor(bgColor, bgColorText);
