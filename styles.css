@@ -359,7 +359,6 @@ p {
 =========================== */
 
 @media (max-width: 1200px) {
-
   #mainContainer {
     width: 95%;
   }
@@ -371,6 +370,7 @@ p {
   }
   
   #mainContainer {
+    width: 85%;  /* For tablets */
     flex-direction: column;
   }
 
@@ -484,5 +484,11 @@ p {
   /* Show status indicators on mobile */
   .status-indicators {
     display: flex;
+  }
+}
+
+@media (max-width: 480px) {
+  #mainContainer {
+    width: 95%;  /* Back to 95% for phones */
   }
 }
