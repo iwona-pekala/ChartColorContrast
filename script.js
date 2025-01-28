@@ -317,6 +317,18 @@ function updateCharts() {
   const passFail = r => parseFloat(r) >= 3.0 ? "PASS" : "FAIL";
   const borderColor = r => parseFloat(r) >= 3.0 ? "#080" : "#EB0000";
 
+  const status1 = document.getElementById('status1');
+  const status2 = document.getElementById('status2');
+  const status3 = document.getElementById('status3');
+
+  status1.textContent = passFail(ratio1);
+  status2.textContent = passFail(ratio2);
+  status3.textContent = passFail(ratio3);
+
+  status1.className = `status-badge ${passFail(ratio1).toLowerCase()}`;
+  status2.className = `status-badge ${passFail(ratio2).toLowerCase()}`;
+  status3.className = `status-badge ${passFail(ratio3).toLowerCase()}`;
+
   const box1 = `
     <div class="contrast-box" style="border-color: ${borderColor(ratio1)};">
       <span class="cbtitle"><span>Dataset 1 Color </span> <span>vs</span> <span> Background Color</span></span>
