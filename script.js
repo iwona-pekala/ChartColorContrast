@@ -18,6 +18,17 @@ const lineChartCanvas = document.getElementById("lineChartCanvas");
 const barChartLegend = document.getElementById("barChartLegend");
 const lineChartLegend = document.getElementById("lineChartLegend");
 
+// Add these variables at the top with other DOM references
+let liveRegionContainer = null;
+let hideTimeout = null;
+
+// Add this at the start of the file
+let prevStatus = {
+  status1: null,
+  status2: null,
+  status3: null
+};
+
 // --- Conversions & WCAG helpers ---
 function hexToRgb(hex) {
   return [
@@ -317,37 +328,75 @@ function updateCharts() {
   const passFail = r => parseFloat(r) >= 3.0 ? "PASS" : "FAIL";
   const borderColor = r => parseFloat(r) >= 3.0 ? "#080" : "#EB0000";
 
+  const currentStatus1 = passFail(ratio1);
+  const currentStatus2 = passFail(ratio2);
+  const currentStatus3 = passFail(ratio3);
+
+  // Handle live region updates if container exists
+  if (liveRegionContainer && (
+      currentStatus1 !== prevStatus.status1 || 
+      currentStatus2 !== prevStatus.status2 || 
+      currentStatus3 !== prevStatus.status3)) {
+    
+    if (hideTimeout) {
+      clearTimeout(hideTimeout);
+    }
+    liveRegionContainer.removeAttribute('aria-hidden');
+
+    setTimeout(() => {
+      if (currentStatus1 !== prevStatus.status1) {
+        document.getElementById('status-live-1').textContent = 
+          `Dataset 1 versus background ${currentStatus1}`;
+        prevStatus.status1 = currentStatus1;
+      }
+      if (currentStatus2 !== prevStatus.status2) {
+        document.getElementById('status-live-2').textContent = 
+          `Dataset 2 versus background ${currentStatus2}`;
+        prevStatus.status2 = currentStatus2;
+      }
+      if (currentStatus3 !== prevStatus.status3) {
+        document.getElementById('status-live-3').textContent = 
+          `Dataset 1 versus Dataset 2 ${currentStatus3}`;
+        prevStatus.status3 = currentStatus3;
+      }
+
+      hideTimeout = setTimeout(() => {
+        liveRegionContainer.setAttribute('aria-hidden', 'true');
+      }, 3000);
+    }, 5);
+  }
+
   const status1 = document.getElementById('status1');
   const status2 = document.getElementById('status2');
   const status3 = document.getElementById('status3');
 
-  status1.textContent = passFail(ratio1);
-  status2.textContent = passFail(ratio2);
-  status3.textContent = passFail(ratio3);
+  status1.textContent = currentStatus1;
+  status2.textContent = currentStatus2;
+  status3.textContent = currentStatus3;
 
-  status1.className = `status-badge ${passFail(ratio1).toLowerCase()}`;
-  status2.className = `status-badge ${passFail(ratio2).toLowerCase()}`;
-  status3.className = `status-badge ${passFail(ratio3).toLowerCase()}`;
+  status1.className = `status-badge ${currentStatus1.toLowerCase()}`;
+  status2.className = `status-badge ${currentStatus2.toLowerCase()}`;
+  status3.className = `status-badge ${currentStatus3.toLowerCase()}`;
 
   const box1 = `
     <div class="contrast-box" style="border-color: ${borderColor(ratio1)};">
       <span class="cbtitle"><span>Dataset 1 Color </span> <span>vs</span> <span> Background Color</span></span>
-      <span class="contrast-ratio">${ratio1}:1</span>
-      <span class="contrast-ratio-text">WCAG 1.4.11: ${passFail(ratio1)}</span>
+      <span class="contrast-ratio">${ratio1}<span>:</span>1</span>
+      <span class="contrast-ratio-text">WCAG 1.4.11: ${currentStatus1}</span>
     </div>
   `;
   const box2 = `
     <div class="contrast-box" style="border-color: ${borderColor(ratio2)};">
       <span class="cbtitle"><span>Dataset 2 Color </span> <span>vs</span> <span> Background Color</span></span>
-      <span class="contrast-ratio">${ratio2}:1</span>
-      <span class="contrast-ratio-text">WCAG 1.4.11: ${passFail(ratio2)}</span>
+      <span class="contrast-ratio">${ratio2}<span>:</span>1</span>
+      <span class="contrast-ratio-text">WCAG 1.4.11: ${currentStatus2}</span>
     </div>
   `;
   const box3 = `
     <div class="contrast-box" style="border-color: ${borderColor(ratio3)};">
       <span class="cbtitle"><span>Dataset 1 Color </span> <span>vs</span> <span> Dataset 2 Color</span></span>
-      <span class="contrast-ratio">${ratio3}:1</span>
-      <span class="contrast-ratio-text">WCAG 1.4.1: ${passFail(ratio3)}</span>
+      <span class="contrast-ratio">${ratio3}<span>:</span>1</span>
+      <span class="contrast-ratio-text">WCAG 1.4.1: ${currentStatus3}</span>
     </div>
   `;
   contrastResults.innerHTML = box1 + box2 + box3;
@@ -484,6 +533,9 @@ chartLightness2.addEventListener('input', () => {
 });
 
 window.addEventListener('DOMContentLoaded', () => {
+  // Initialize the live region container
+  liveRegionContainer = document.querySelector('.visually-hidden');
+  
   // Handle URL parameters first
   handleUrlParams();
 
@@ -500,3 +552,5 @@ window.addEventListener('DOMContentLoaded', () => {
   // Initial chart drawing
   updateCharts();
 });
+
+
