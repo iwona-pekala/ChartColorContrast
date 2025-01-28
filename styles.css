@@ -2,7 +2,6 @@
    Global Styles
 =========================== */
 
-/* Apply box-sizing globally for consistency */
 *,
 *::before,
 *::after {
@@ -12,11 +11,8 @@
 body {
   font-family: Arial, sans-serif;
   margin: 0;
-  /* Reset default margin */
   padding: 0;
-  /* Reset default padding */
   background-color: #f0f0f0;
-  /* Optional: Light background for overall page */
 }
 
 /* ===========================
@@ -27,24 +23,15 @@ body {
 #mainContainer {
   display: flex;
   flex-direction: row;
-  align-items: flex-start;
-  /* Align items to the top */
+  align-items: stretch;
   gap: 2rem;
-  /* Space between wrapper and explanation */
   width: 90%;
-  /* Adjust as needed */
   max-width: 1200px;
-  /* Optional: Limit maximum width */
   margin: 2rem auto;
-  /* Center the main container with top and bottom margins */
   padding: 1rem;
-  /* Optional: Add padding */
   background-color: #ffffff;
-  /* Optional: White background for main content */
   border-radius: 8px;
-  /* Rounded corners for main container */
   box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-  /* Subtle shadow for depth */
 }
 
 /* Existing Wrapper Styling Adjustments */
@@ -54,36 +41,29 @@ body {
 
 #aside {
   flex: 0 0 30%;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
 }
 
 #explanation {
-  border: 2px solid #ccc;
-  /* Optional: Add border for distinction */
+  border: 3px solid #ccc;
   border-radius: 4px;
-  /* Rounded corners */
   padding: 1rem;
-  /* Internal padding */
   background-color: #f9f9f9;
-  /* Light background for readability */
 }
 
 /* Heading Styling within Explanation */
 #aside h2 {
   margin-top: 0;
-  /* Remove default top margin */
   font-size: 1.5rem;
-  /* Adjust heading size as needed */
   color: #333;
-  /* Darker color for heading */
 }
 
 #aside p {
   font-size: 1rem;
-  /* Standard paragraph size */
   line-height: 1.5;
-  /* Improved readability */
   color: #555;
-  /* Slightly lighter text color */
 }
 
 /* ===========================
@@ -91,7 +71,6 @@ body {
 =========================== */
 
 
-/* Ensure all inner divs take 100% width of the wrapper */
 #wrapper div {
   width: 100%;
 }
@@ -102,42 +81,29 @@ body {
   display: flex;
   flex-direction: row;
   gap: 1rem;
-  /* Consistent gap between items */
   justify-content: space-between;
-  /* Even distribution */
 }
 
 .fieldsets-container {
   margin-bottom: 1rem;
-  /* Space below fieldsets */
 }
 
 #contrastResults {
   margin-top: 10px;
-  /* Space above contrast results */
 }
 
 /* Fieldset and Contrast Box Styling */
 fieldset,
 .contrast-box {
   flex: 0 0 30%;
-  /* Fixed width, do not grow or shrink */
   padding: 1rem;
-  /* Consistent padding */
   margin: 0;
-  /* Remove default margins */
   border: 3px solid #ccc;
-  /* Consistent border width and style */
   border-radius: 4px;
-  /* Consistent border radius */
   display: flex;
   flex-direction: column;
-  /* Arrange child elements vertically */
-  /* Align items to the start */
   gap: 0.5rem;
-  /* Space between child elements */
   background-color: #fafafa;
-  /* Optional: Light background for contrast boxes */
 }
 
 fieldset {
@@ -156,7 +122,6 @@ fieldset {
 legend {
   margin-bottom: 0.5em;
   font-size: 1.1rem;
-  /* Slightly larger font for legends */
 }
 
 /* Input Styling within Fieldset */
@@ -165,23 +130,19 @@ fieldset input {
   width: 80%;
   margin-bottom: 0.5rem;
   padding: 5px;
-  /* Optional: Add padding for better text visibility */
   font-size: 1rem;
-  /* Optional: Adjust font size for readability */
 }
 
 /* Specific Styling for Color and Text Inputs */
 fieldset input[type="color"],
 fieldset input[type="text"] {
   height: 30px;
-  /* Same height for both inputs */
   border: 1px solid #000;
 }
 
 fieldset input[type="color"] {
   padding: 4px;
   cursor: pointer;
-  /* Pointer cursor for better UX */
 }
 
 .cbtitle {
@@ -189,7 +150,6 @@ fieldset input[type="color"] {
   flex-direction: column;
   align-items: center;
   gap: 4px;
-  /* adds some space between the elements */
 }
 
 
@@ -197,7 +157,6 @@ fieldset input[type="color"] {
   text-align: center;
 }
 
-/* Target spans inside .cbtitle span */
 .contrast-box .cbtitle span {
   text-align: center;
 }
@@ -206,30 +165,25 @@ fieldset input[type="color"] {
   font-weight: bold;
 }
 
-/* Contrast Ratio Styling */
 .contrast-ratio {
   font-size: 2rem;
   color: #000;
 }
 
-/* Charts Row Styling */
 .charts-row {
   display: flex;
   flex-direction: row;
   gap: 1rem;
   margin-top: 20px;
   justify-content: center;
-  /* Centers the charts horizontally */
 }
 
 .chart-preview {
   display: flex;
   flex-direction: column;
   align-items: center;
-  /* Center contents horizontally */
   justify-content: center;
   width: 100%;
-  /* Ensure the chart preview takes full width */
 }
 
 /* Canvas Styling */
@@ -238,7 +192,6 @@ canvas {
   border-radius: 4px;
   display: block;
   max-width: 100%;
-  /* Ensure canvas doesn't overflow its container */
   height: auto;
 }
 
@@ -249,9 +202,7 @@ canvas {
   gap: 1rem;
   margin-top: 10px;
   justify-content: center;
-  /* Center the legend items horizontally */
   width: 100%;
-  /* Match the width of the chart preview */
 }
 
 .legend-item {
@@ -269,7 +220,6 @@ canvas {
   height: 12px;
   display: inline-block;
   border: 1px solid #000;
-  /* Optional: Add border for better visibility */
 }
 
 /* ===========================
@@ -278,7 +228,6 @@ canvas {
 
 @media (max-width: 1200px) {
 
-  /* Optional: Adjust main container padding or width for medium screens */
   #mainContainer {
     width: 95%;
   }
@@ -286,12 +235,10 @@ canvas {
 
 @media (max-width: 768px) {
 
-  /* Responsive adjustments for smaller screens */
   #mainContainer {
     flex-direction: column;
   }
 
-  /* Ensure wrapper and explanation take full width */
   #wrapper,
   #aside {
     width: 100%;
@@ -303,18 +250,14 @@ canvas {
   .charts-row {
     flex-direction: column;
     align-items: stretch;
-    /* Changed from center to stretch */
     gap: 1rem;
-    /* Maintain consistent gaps */
   }
 
   /* Adjust fieldset and contrast-box for full width */
   fieldset,
   .contrast-box {
     flex: 1 0 100%;
-    /* Allow elements to grow and occupy full width */
     width: 100%;
-    /* Explicitly set width to 100% */
   }
 
   .cbtitle {
@@ -324,9 +267,7 @@ canvas {
   /* Ensure chart-preview retains its original styling */
   .chart-preview {
     align-items: center;
-    /* Maintain center alignment for chart contents */
     width: 100%;
-    /* Ensure charts take full width */
   }
 
   /* Optional: Adjust canvas size for better fit */
@@ -335,14 +276,12 @@ canvas {
     height: auto;
   }
 
-  /* **New Styles: Arrange Elements Within Fieldset Correctly** */
 
   /* Remove grid display from fieldset and set up flex layout */
   fieldset {
     display: flex;
     flex-direction: column;
     gap: 0.5rem;
-    /* Reduced gap to minimize blank space */
     padding: 1.2rem 1rem 0 1rem;
   }
 
@@ -351,16 +290,13 @@ canvas {
     display: flex;
     flex-direction: row;
     gap: 1.5rem;
-    /* Gap between color and text inputs */
   }
 
   /* Ensure both inputs have the same height and take equal space */
   #colorwrapper input[type="color"],
   #colorwrapper input[type="text"] {
     flex: 1;
-    /* Allow inputs to take equal space */
     height: 40px;
-    /* Consistent height */
   }
 
   /* Style the lightnesswrapper to display label and range input vertically */
@@ -368,16 +304,13 @@ canvas {
     display: flex;
     flex-direction: column;
     gap: 0.01rem;
-    /* Gap between label and range input */
   }
 
   /* Ensure the label takes full width */
   #lightnesswrapper label.lightnesslabel {
     width: 100%;
     margin: 0;
-    /* Remove any default margins */
     font-size: 1rem;
-    /* Adjust font size if necessary */
   }
 
   /* Style the range input to take full width */
@@ -385,9 +318,6 @@ canvas {
     width: 46%;
   }
 
-  /* Reduce any additional gaps that might be causing extra space */
-  /* Remove padding and margin from nested wrappers if necessary */
-  /* If the big blank space persists, inspect other nested elements */
   #colorwrapper,
   #lightnesswrapper {
     margin: 0;
@@ -406,12 +336,14 @@ canvas {
   #aside p {
     font-size: 0.9rem;
   }
+
+  #aside {
+    display: block;
+  }
 }
 
-/* Ensure Sufficient Contrast in Explanation Container */
 #aside {
   color: #333;
-  /* Dark text on light background */
 }
 
 #permalink {
@@ -430,9 +362,7 @@ canvas {
   text-decoration-style: double;
 }
 
-/* ===========================
-   Utility Classes (Optional)
-=========================== */
+
 
 /* Center Text */
 .text-center {
