@@ -16,7 +16,7 @@
     <div id="wrapper">
       <h1>Chart Color Contrast Checker</h1>
 
-      <div class="fieldsets-container">
+      <div class="fieldsets-container" role="region" aria-label="Color settings">
         <!-- Fieldset: Background Color -->
         <fieldset>
           <legend>Background Color</legend>
@@ -58,14 +58,14 @@
       </div>
 
       <!-- Contrast Results -->
-      <div class="contrast-result" id="contrastResults">
+      <div class="contrast-result" id="contrastResults" role="region" aria-label="Contrast results">
         <!-- Contrast boxes will be dynamically inserted here -->
       </div>
 
       <!-- Two charts, side by side -->
-      <div class="charts-row">
+      <div class="charts-row" role="region" aria-label="Charts">
         <!-- Bar Chart -->
-        <div class="chart-preview" role="img" aria-label="Bar Chart">
+        <div class="chart-preview" role="img" aria-label="Sample bar chart demonstrating selected color combinations">
           <canvas id="chartCanvas" width="400" height="200"></canvas>
           <div class="chart-legend" id="barChartLegend" aria-hidden="true">
             <!-- Legend items will be dynamically inserted here -->
@@ -73,7 +73,7 @@
         </div>
 
         <!-- Line Chart -->
-        <div class="chart-preview" role="img" aria-label="Line Chart">
+        <div class="chart-preview" role="img" aria-label="Sample line chart visualizing selected color combinations">
           <canvas id="lineChartCanvas" width="400" height="200"></canvas>
           <div class="chart-legend" id="lineChartLegend" aria-hidden="true">
             <!-- Legend items will be dynamically inserted here -->
@@ -82,23 +82,17 @@
       </div>
     </div>
 
-    <div id="aside">
+    <aside id="aside">
       <div id="explanation">
-        <h2>Explanation</h2>
+        <h2>Checkers' purpose</h2>
         <p>
-          Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vivamus lacinia odio vitae vestibulum vestibulum.
-          Cras venenatis euismod malesuada. Nullam ac erat ante. Integer fringilla, ipsum a facilisis vestibulum,
-          justo sapien gravida nulla, a tristique elit metus non metus. Sed sit amet sapien in odio malesuada aliquam.
-          Duis vulputate, lectus nec feugiat dapibus, sapien quam sollicitudin nunc, in vestibulum leo nisl in sapien.
-          Quisque ac lacus nec metus tempor auctor. Nulla facilisi. Aenean sit amet magna vel sapien tempor interdum.
-          Donec in tortor nec massa elementum tincidunt. Proin euismod, nunc at ullamcorper facilisis, lacus neque
-          ullamcorper magna, sit amet gravida nibh metus nec justo.
+          When displaying data on a chart, WCAG SC 1.4.1 requires a visual indicator other than color (e.g., patterns for bar charts or line styles for line charts) to differentiate datasets. If only colors are used, datasets must have a contrast ratio of at least 3:1 against each other. Additionally, each dataset's color must have a contrast ratio of at least 3:1 against the background to meet WCAG SC 1.4.11.
         </p>
       </div>
       <div id="permalink">
       <a href="">Permalink</a>
-    </div>
-    </div>
+      </div>
+    </aside>
   </div>
 
   <!-- Link to External JavaScript -->
