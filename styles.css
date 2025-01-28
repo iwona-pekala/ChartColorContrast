@@ -341,8 +341,8 @@ p {
   color: white;
   border: 1px solid white;
   border-radius: 1.4rem;
-  font-size: 0.9rem;
-  font-weight: bold;
+  font-size: 1.3rem;
+  
 }
 
 .status-badge.pass {
@@ -366,7 +366,10 @@ p {
 }
 
 @media (max-width: 768px) {
-
+  h1 {
+    text-align: center;
+  }
+  
   #mainContainer {
     flex-direction: column;
   }
@@ -431,23 +434,28 @@ p {
     height: 40px;
   }
 
-  /* Style the lightnesswrapper to display label and range input vertically */
+  /* Update lightnesswrapper styling for mobile */
   #lightnesswrapper {
     display: flex;
     flex-direction: column;
     gap: 0.01rem;
+    align-items: center;  /* Center children horizontally */
+    width: 100%;
   }
 
-  /* Ensure the label takes full width */
+  /* Center the label and adjust spacing */
   #lightnesswrapper label.lightnesslabel {
     width: 100%;
     margin: 0;
     font-size: 1rem;
+    text-align: center;
+    padding-top: 0.8rem;
   }
 
-  /* Style the range input to take full width */
+  /* Increase range input width and center it */
   #lightnesswrapper input[type="range"] {
-    width: 46%;
+    width: 75%;
+    margin: 0 auto;
   }
 
   #colorwrapper,
